@@ -1,0 +1,642 @@
+2,3 ve 4.hafta ödevleri
+
+1)Kullanıcıdan bir dizi tam sayı alın ve bu sayıları sıralayın. Ardından, kullanıcıdan bir sayı alın ve bu sayının dizide olup olmadığını ikili arama algoritması ile kontrol edin. Sonucu ekrana yazdırın.
+
+class Program
+{
+    static void Main()
+    {
+        int[] dizi = new int[5];  // Dizi boyutu 5
+        Console.WriteLine("5 adet sayı giriniz:");
+
+        
+        for (int i = 0; i < dizi.Length; i++)
+        {
+            dizi[i] = int.Parse(Console.ReadLine());
+        }
+
+        Console.WriteLine("aranacak sayıyı giriniz");
+        int aranacakSayi = int.Parse(Console.ReadLine());
+
+        
+        int sonuc = Array.BinarySearch(dizi, aranacakSayi);
+
+
+        if (sonuc >= 0)
+        {
+            Console.WriteLine("Sayı bulundu: " + aranacakSayi);
+        }
+        else
+        {
+            Console.WriteLine("Sayı bulunamadı");
+        }
+    }
+}
+------------------------------------------------------------------------------
+
+2)Kullanıcıdan pozitif tam sayılar alarak, bu sayıların ortalamasını ve medyanını hesaplayan bir program yazın. Kullanıcı 0 girene kadar sayıları almaya devam etsin. 0 girildiğinde ortalamayı ve medyanı gösterin.
+
+class Program
+{
+    static void Main()
+    {
+        List<int> sayilar = new List<int>();
+        int toplam = 0;
+
+        Console.WriteLine("Sayıları girin (bitirmek için 0 girin):");
+        
+        while (true)
+        {
+            int sayi = Convert.ToInt32(Console.ReadLine());
+            if (sayi == 0) // 0 ile çıkış
+            {
+                Console.WriteLine("Çıkılıyor..");
+                break;
+            }
+
+            sayilar.Add(sayi);
+            toplam += sayi;
+
+
+            sayilar.Sort();
+
+            int n = sayilar.Count; 
+            double ortalama = (double)toplam / n;
+            Console.WriteLine("Ortalama: " + ortalama);
+
+            double medyan;
+            if (n % 2 == 0)
+            {
+                // Çift sayıda eleman için medyan
+                medyan = (sayilar[n / 2 - 1] + sayilar[n / 2]) / 2.0;
+            }
+            else
+            {
+                // Tek sayıda eleman için medyan
+                medyan = sayilar[n / 2];
+            }
+            Console.WriteLine("Medyan: " + medyan);
+        }
+    }
+
+------------------
+3)Kullanıcıdan bir dizi tamsayı alın ve bu dizideki ardışık sayı gruplarını tespit eden bir program yazın. Örneğin, 1, 2, 3, 5, 6, 7, 10 dizisi için program, 1-3 ve 5-7 gruplarını döndürmelidir. Kullanıcı 0 girene kadar sayıları almaya devam etsin.
+
+
+class Program
+{
+    static void Main()
+    {
+        List<int> sayilar = new List<int>();
+        Console.WriteLine("Sayıları girin (bitirmek için 0 girin):");
+
+        while (true)
+        {
+            int sayi = Convert.ToInt32(Console.ReadLine());
+            if (sayi == 0) // durdurma işlemi
+            {
+                break;
+            }
+            sayilar.Add(sayi);
+        }
+
+      
+        sayilar.Sort();
+
+        List<string> grups = new List<string>();
+        int baslangic = sayilar[0];
+        int onceki = baslangic;
+
+        for (int i = 1; i < sayilar.Count; i++)
+        {
+            int simdiki = sayilar[i];
+
+            if (simdiki != onceki + 1) // ardışıklık bozulmuş demektir
+            {
+                if (baslangic == onceki)
+                {
+                    grups.Add(baslangic.ToString());
+                }
+                else
+                {
+                    grups.Add(baslangic + "-" + onceki);
+                }
+                baslangic = simdiki;
+            }
+            onceki = simdiki;
+        }
+
+   
+        if (baslangic == onceki)
+        {
+            grups.Add(baslangic.ToString());
+        }
+        else
+        {
+            grups.Add(baslangic + "-" + onceki);
+        }
+
+        
+        Console.WriteLine("Ardışık gruplar:");
+        foreach (string grup in grups)
+        {
+            Console.WriteLine(grup);
+        }
+    }
+}
+
+4 ve 5 i yapamadım 
+
+6)
+
+static void Main(string[] args)
+    {
+        List<string> validDates = new List<string>();
+        DateTime today = DateTime.Now;
+
+        for (int year = 2000; year <= 3000; year++)
+        {
+            // Yılın rakamları toplamı, yılın dörtte birinden küçük olmalı
+            int yearSum = 0, tempYear = year;
+            while (tempYear > 0)
+            {
+                yearSum += tempYear % 10;
+                tempYear /= 10;
+            }
+            if (yearSum >= year / 4) continue;
+
+            for (int month = 1; month <= 12; month++)
+            {
+                // Ayın tüm basamaklarının toplamı çift olmalı
+                int monthSum = 0, tempMonth = month;
+                while (tempMonth > 0)
+                {
+                    monthSum += tempMonth % 10;
+                    tempMonth /= 10;
+                }
+                if (monthSum % 2 != 0) continue;
+
+                // 2 ile 31 arasındaki asal günleri kontrol et
+                for (int day = 2; day <= 31; day++)
+                {
+                    if (day > DateTime.DaysInMonth(year, month)) break;
+
+                    // Asal sayıları bulma
+                    bool isPrime = true;
+                    for (int i = 2; i <= Math.Sqrt(day); i++)
+                    {
+                        if (day % i == 0)
+                        {
+                            isPrime = false;
+                            break;
+                        }
+                    }
+                    if (!isPrime) continue;
+
+                    // Bugünden sonraki tarihleri kontrol et
+                    DateTime date = new DateTime(year, month, day);
+                    if (date > today)
+                    {
+                        validDates.Add(date.ToString("yyyy-MM-dd"));
+                    }
+                }
+            }
+        }
+
+        // Sonuçları yazdır
+        foreach (var date in validDates)
+        {
+            Console.WriteLine(date);
+        }
+    }
+
+
+7)
+
+static void Main(string[] args)
+    {
+        Console.Write("Labirentin satır sayısını girin (M): ");
+        int M = int.Parse(Console.ReadLine());
+        Console.Write("Labirentin sütun sayısını girin (N): ");
+        int N = int.Parse(Console.ReadLine());
+
+        // Hedef nokta (M-1, N-1)
+        if (CanReachCity(M, N))
+        {
+            Console.WriteLine("Şehre ulaşıldı!");
+        }
+        else
+        {
+            Console.WriteLine("Şehir kayboldu!");
+        }
+    }
+
+    static bool IsPrime(int num)
+    {
+        if (num < 2) return false;
+        for (int i = 2; i * i <= num; i++)
+        {
+            if (num % i == 0) return false;
+        }
+        return true;
+    }
+
+    static bool IsDoorOpen(int x, int y)
+    {
+        return IsPrime(x) && IsPrime(y) && (x + y) % (x * y) == 0;
+    }
+
+    static bool CanReachCity(int M, int N)
+    {
+        var directions = new (int, int)[] { (0, 1), (1, 0), (0, -1), (-1, 0) }; // sağ, aşağı, sol, yukarı
+        var visited = new bool[M, N];
+        var queue = new Queue<(int, int)>();
+        var path = new List<(int, int)>();
+
+        // Başlangıç noktasını ekle
+        if (IsDoorOpen(0, 0))
+        {
+            queue.Enqueue((0, 0));
+            visited[0, 0] = true;
+            path.Add((0, 0));
+        }
+
+        while (queue.Count > 0)
+        {
+            var (x, y) = queue.Dequeue();
+
+            // Hedef nokta kontrolü
+            if (x == M - 1 && y == N - 1)
+            {
+                PrintPath(path);
+                return true;
+            }
+
+            foreach (var (dx, dy) in directions)
+            {
+                int newX = x + dx;
+                int newY = y + dy;
+
+                if (newX >= 0 && newX < M && newY >= 0 && newY < N && 
+                    IsDoorOpen(newX, newY) && !visited[newX, newY])
+                {
+                    queue.Enqueue((newX, newY));
+                    visited[newX, newY] = true;
+                    path.Add((newX, newY));
+                }
+            }
+        }
+
+        return false;
+    }
+
+    static void PrintPath(List<(int, int)> path)
+    {
+        Console.WriteLine("Ulaşım yolu:");
+        foreach (var (x, y) in path)
+        {
+            Console.Write($"({x}, {y}) ");
+        }
+        Console.WriteLine();
+    }
+
+
+
+8)
+
+static void Main(string[] args)
+    {
+        Console.Write("Şifrelenmiş mesajı girin: ");
+        string encryptedMessage = Console.ReadLine();
+
+        string originalMessage = DecryptMessage(encryptedMessage);
+        Console.WriteLine("Orijinal mesaj: " + originalMessage);
+    }
+
+    static int Fibonacci(int n)
+    {
+        if (n <= 1) return n;
+        int a = 0, b = 1, c = 0;
+        for (int i = 2; i <= n; i++)
+        {
+            c = a + b;
+            a = b;
+            b = c;
+        }
+        return c;
+    }
+
+    static bool IsPrime(int num)
+    {
+        if (num < 2) return false;
+        for (int i = 2; i * i <= num; i++)
+        {
+            if (num % i == 0) return false;
+        }
+        return true;
+    }
+
+    static string DecryptMessage(string encryptedMessage)
+    {
+        char[] originalChars = new char[encryptedMessage.Length];
+
+        for (int i = 0; i < encryptedMessage.Length; i++)
+        {
+            int position = i + 1; // Pozisyon 1'den başlar
+            char encryptedChar = encryptedMessage[i];
+            int encryptedAscii = (int)encryptedChar;
+
+            // Fibonacci sayısını bul
+            int fib = Fibonacci(position);
+
+            // Ters mod işlemi
+            int originalAscii;
+
+            if (IsPrime(position)) // Pozisyon asal mı?
+            {
+                // Asal pozisyon için 100'e göre çözüm
+                originalAscii = (encryptedAscii + 100) / fib; // Ters işlem
+            }
+            else
+            {
+                // Asal olmayan pozisyon için 256'ya göre çözüm
+                originalAscii = (encryptedAscii + 256) / fib; // Ters işlem
+            }
+
+            // ASCII değerini karaktere dönüştür
+            originalChars[i] = (char)originalAscii;
+        }
+
+        return new string(originalChars);
+    }
+
+
+9)
+
+ static void Main(string[] args)
+    {
+        Console.Write("Asteroitin boyutunu girin (N x N): ");
+        int N = int.Parse(Console.ReadLine());
+
+        // Enerji tüketimi matrisini oluştur
+        int[,] energyCosts = new int[N, N];
+        Console.WriteLine("Enerji tüketimlerini girin (her satır için N sayı):");
+
+        for (int i = 0; i < N; i++)
+        {
+            string[] input = Console.ReadLine().Split();
+            for (int j = 0; j < N; j++)
+            {
+                energyCosts[i, j] = int.Parse(input[j]);
+            }
+        }
+
+        int minEnergy = FindMinimumEnergyPath(energyCosts, N);
+        Console.WriteLine("En az enerji harcayan yolun maliyeti: " + minEnergy);
+    }
+
+    static int FindMinimumEnergyPath(int[,] energyCosts, int N)
+    {
+        // DP matrisini oluştur
+        int[,] dp = new int[N, N];
+
+        // (0, 0) başlangıç hücresinin maliyeti
+        dp[0, 0] = energyCosts[0, 0];
+
+        // İlk satır için
+        for (int j = 1; j < N; j++)
+        {
+            dp[0, j] = dp[0, j - 1] + energyCosts[0, j]; // Sadece sağa hareket
+        }
+
+        // İlk sütun için
+        for (int i = 1; i < N; i++)
+        {
+            dp[i, 0] = dp[i - 1, 0] + energyCosts[i, 0]; // Sadece aşağı hareket
+        }
+
+        // Diğer hücreler için
+        for (int i = 1; i < N; i++)
+        {
+            for (int j = 1; j < N; j++)
+            {
+                // Üstten, soldan ve çaprazdan gelen minimum maliyeti al
+                dp[i, j] = Math.Min(dp[i - 1, j], Math.Min(dp[i, j - 1], dp[i - 1, j - 1])) + energyCosts[i, j];
+            }
+        }
+
+        return dp[N - 1, N - 1]; // Hedef hücresinin maliyeti
+    }
+
+
+10)
+static void Main(string[] args)
+    {
+        Console.Write("Sayılardan oluşan bir dizi girin (örneğin: 3, 5, 2): ");
+        string input = Console.ReadLine();
+        string[] numberStrings = input.Split(',');
+        List<int> numbers = new List<int>();
+
+        // Sayıları listeye ekle
+        foreach (var number in numberStrings)
+        {
+            if (int.TryParse(number.Trim(), out int num))
+            {
+                numbers.Add(num);
+            }
+            else
+            {
+                Console.WriteLine("Geçersiz sayı girişi. Lütfen sadece sayılar girin.");
+                return;
+            }
+        }
+
+        List<string> operators = new List<string> { "+", "-", "*", "/" };
+        List<string> expressions = new List<string>();
+
+        // Geçerli ifadeleri bulma süreci
+        for (int i = 0; i < numbers.Count; i++)
+        {
+            for (int j = i + 1; j < numbers.Count; j++)
+            {
+                foreach (var op1 in operators)
+                {
+                    foreach (var op2 in operators)
+                    {
+                        // İki sayı ve iki operatör ile ifade oluştur
+                        string expression = $"{numbers[i]} {op1} {numbers[j]}";
+                        expressions.Add(expression);
+                        expression = $"{numbers[j]} {op2} {numbers[i]}";
+                        expressions.Add(expression);
+                    }
+                }
+            }
+        }
+
+        // Geçerli ifadeleri değerlendirme
+        List<string> validExpressions = new List<string>();
+        foreach (var expr in expressions)
+        {
+            try
+            {
+                var dataTable = new System.Data.DataTable();
+                var result = Convert.ToInt32(dataTable.Compute(expr, string.Empty));
+                if (result > 0)
+                {
+                    validExpressions.Add(expr);
+                }
+            }
+            catch
+            {
+                // Hatalı ifadeleri atla
+            }
+        }
+
+        // Sonuçları yazdırma
+        if (validExpressions.Count > 0)
+        {
+            Console.WriteLine("Geçerli ifadeler:");
+            foreach (var expression in validExpressions)
+            {
+                Console.WriteLine(expression);
+            }
+        }
+        else
+        {
+            Console.WriteLine("Geçerli bir ifade bulunamadı.");
+        }
+    }
+
+
+using System;
+public class BankaHesabi
+{
+	public string HesapNumarasi { get; }
+	private decimal Bakiye { get; set; }
+
+	public BankaHesabi(string hesapNumarasi, decimal ilkBakiye)
+	{
+		HesapNumarasi = hesapNumarasi;
+		Bakiye = ilkBakiye;
+	}
+
+	public void ParaYatir(decimal miktar)
+	{
+		if (miktar > 0)
+			Bakiye += miktar;
+	}
+
+	public void ParaCek(decimal miktar)
+	{
+		if (miktar > 0 && Bakiye >= miktar)
+			Bakiye -= miktar;
+	}
+
+	public decimal BakiyeGoster()
+	{
+		return Bakiye;
+	}
+}
+
+// Soru 2: Ürün Sınıfı
+public class Urun
+{
+	public string Ad { get; }
+	public decimal Fiyat { get; }
+	private decimal indirim;
+
+	public decimal Indirim
+	{
+		get { return indirim; }
+		set { indirim = (value >= 0 && value <= 50) ? value : 0; }
+	}
+
+	public Urun(string ad, decimal fiyat)
+	{
+		Ad = ad;
+		Fiyat = fiyat;
+		Indirim = 0;
+	}
+
+	public decimal IndirimliFiyat()
+	{
+		return Fiyat * (1 - Indirim / 100);
+	}
+}
+
+// Soru 3: Araç Kiralama Sınıfı
+public class KiralikArac
+{
+	public string Plaka { get; }
+	public decimal GunlukUcret { get; }
+	public bool MusaitMi { get; private set; }
+
+	public KiralikArac(string plaka, decimal gunlukUcret)
+	{
+		Plaka = plaka;
+		GunlukUcret = gunlukUcret;
+		MusaitMi = true;
+	}
+
+	public void AraciKirala()
+	{
+		if (MusaitMi)
+			MusaitMi = false;
+	}
+
+	public void AraciTeslimEt()
+	{
+		if (!MusaitMi)
+			MusaitMi = true;
+	}
+}
+
+// Soru 4: Adres Defteri Sınıfı
+public class Kisi
+{
+	public string Ad { get; }
+	public string Soyad { get; }
+	public string TelefonNumarasi { get; }
+
+	public Kisi(string ad, string soyad, string telefonNumarasi)
+	{
+		Ad = ad;
+		Soyad = soyad;
+		TelefonNumarasi = telefonNumarasi;
+	}
+
+	public string KisiBilgisi()
+	{
+		return $"{Ad} {Soyad} - {TelefonNumarasi}";
+	}
+}
+
+// Soru 5: Kütüphane Sınıfı
+public class Kitap
+{
+	public string Ad { get; set; }
+	public string Yazar { get; set; }
+}
+
+public class Kutuphane
+{
+	private List<Kitap> Kitaplar { get; }
+
+	public Kutuphane()
+	{
+		Kitaplar = new List<Kitap>();
+	}
+
+	public void KitapEkle(Kitap yeniKitap)
+	{
+		Kitaplar.Add(yeniKitap);
+	}
+
+	public void KitaplariListele()
+	{
+		foreach (var kitap in Kitaplar)
+		{
+			Console.WriteLine($"{kitap.Ad} - {kitap.Yazar}");
+		}
+	}
+}

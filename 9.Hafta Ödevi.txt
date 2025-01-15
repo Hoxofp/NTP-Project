@@ -1,0 +1,197 @@
+using System;
+using System.Collections.Generic;
+
+namespace MarketManagementSystem
+{
+    // Abstract base class for customers
+    public abstract class Customer
+    {
+        public string Name { get; set; }
+        public string ContactInfo { get; set; }
+
+        public Customer(string name, string contactInfo)
+        {
+            Name = name;
+            ContactInfo = contactInfo;
+        }
+
+        public abstract void DisplayDetails();
+    }
+
+    // Individual customer class
+    public class IndividualCustomer : Customer
+    {
+        public string PersonalID { get; set; }
+
+        public IndividualCustomer(string name, string contactInfo, string personalID) : base(name, contactInfo)
+        {
+            PersonalID = personalID;
+        }
+
+        public override void DisplayDetails()
+        {
+            Console.WriteLine($"Individual Customer: {Name}, Contact: {ContactInfo}, ID: {PersonalID}");
+        }
+    }
+
+    // Corporate customer class
+    public class CorporateCustomer : Customer
+    {
+        public string CompanyName { get; set; }
+        public string TaxNumber { get; set; }
+
+        public CorporateCustomer(string name, string contactInfo, string companyName, string taxNumber) : base(name, contactInfo)
+        {
+            CompanyName = companyName;
+            TaxNumber = taxNumber;
+        }
+
+        public override void DisplayDetails()
+        {
+            Console.WriteLine($"Corporate Customer: {Name}, Contact: {ContactInfo}, Company: {CompanyName}, Tax Number: {TaxNumber}");
+        }
+    }
+
+    // Product class
+    public class Product
+    {
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+
+        public Product(string name, decimal price)
+        {
+            Name = name;
+            Price = price;
+        }
+    }
+
+    // Discount base class
+    public abstract class Discount
+    {
+        public string DiscountName { get; set; }
+
+        public Discount(string discountName)
+        {
+            DiscountName = discountName;
+        }
+
+        public abstract decimal ApplyDiscount(decimal total);
+    }
+
+    // Percentage discount
+    public class PercentageDiscount : Discount
+    {
+        public decimal Percentage { get; set; }
+
+        public PercentageDiscount(string discountName, decimal percentage) : base(discountName)
+        {
+            Percentage = percentage;
+        }
+
+        public override decimal ApplyDiscount(decimal total)
+        {
+            return total - (total * (Percentage / 100));
+        }
+    }
+
+    // Fixed discount
+    public class FixedDiscount : Discount
+    {
+        public decimal Amount { get; set; }
+
+        public FixedDiscount(string discountName, decimal amount) : base(discountName)
+        {
+            Amount = amount;
+        }
+
+        public override decimal ApplyDiscount(decimal total)
+        {
+            return total - Amount > 0 ? total - Amount : 0;
+        }
+    }
+
+    // Shopping cart class
+    public class Cart
+    {
+        public List<Product> Products { get; set; } = new List<Product>();
+
+        public void AddProduct(Product product)
+        {
+            Products.Add(product);
+        }
+
+        public decimal CalculateTotal()
+        {
+            decimal total = 0;
+            foreach (var product in Products)
+            {
+                total += product.Price;
+            }
+            return total;
+        }
+    }
+
+    // Order class
+    public class Order
+    {
+        public Customer Customer { get; set; }
+        public Cart Cart { get; set; }
+        public Discount Discount { get; set; }
+        public string Status { get; set; }
+
+        public Order(Customer customer, Cart cart, Discount discount)
+        {
+            Customer = customer;
+            Cart = cart;
+            Discount = discount;
+            Status = "Order Placed";
+        }
+
+        public decimal GetFinalAmount()
+        {
+            try
+            {
+                decimal total = Cart.CalculateTotal();
+                return Discount != null ? Discount.ApplyDiscount(total) : total;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error calculating final amount: " + ex.Message);
+                return 0;
+            }
+        }
+
+        public void UpdateStatus(string newStatus)
+        {
+            Status = newStatus;
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Sample data
+            Customer individual = new IndividualCustomer("John Doe", "123456789", "A12345");
+            Customer corporate = new CorporateCustomer("Jane Smith", "987654321", "TechCorp", "T98765");
+
+            Product product1 = new Product("Laptop", 1500);
+            Product product2 = new Product("Mouse", 50);
+
+            Cart cart = new Cart();
+            cart.AddProduct(product1);
+            cart.AddProduct(product2);
+
+            Discount discount = new PercentageDiscount("New Year Discount", 10);
+
+            Order order = new Order(individual, cart, discount);
+
+            Console.WriteLine("--- Order Details ---");
+            individual.DisplayDetails();
+            Console.WriteLine("Total Amount: " + order.GetFinalAmount());
+
+            order.UpdateStatus("Preparing");
+            Console.WriteLine("Order Status: " + order.Status);
+        }
+    }
+}

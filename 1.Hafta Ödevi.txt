@@ -1,0 +1,385 @@
+ADAM ASMACA OYUNU TERMİNAL
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+       
+        string[] kelimeler = { "elma", "armut", "muz", "çilek", "kavun", "karpuz", "portakal" };
+        
+       
+        Random random = new Random();
+        string secilenKelime = kelimeler[random.Next(0, kelimeler.Length)];
+
+        
+        char[] dogruTahminler = new char[secilenKelime.Length];
+        for (int i = 0; i < dogruTahminler.Length; i++)
+        {
+            dogruTahminler[i] = '_';  // Başlangıçta her harf boş çizgi olarak gösterilecek
+        }
+
+        
+        int yanlisTahminSiniri = 6;
+        int yanlisTahminSayaci = 0;
+
+        
+        List<char> kullanilanHarfler = new List<char>();
+
+        
+        while (yanlisTahminSayaci < yanlisTahminSiniri && new string(dogruTahminler) != secilenKelime)
+        {
+            
+            Console.WriteLine("Kelime: " + new string(dogruTahminler));
+            Console.WriteLine("Kalan Hakkınız: " + (yanlisTahminSiniri - yanlisTahminSayaci));
+            Console.WriteLine("Kullandığınız Harfler: " + string.Join(", ", kullanilanHarfler));
+
+           
+            Console.Write("Bir harf tahmin edin: ");
+            char tahmin = char.ToLower(Console.ReadKey().KeyChar);  // Küçük harfe çevirme
+            Console.WriteLine();
+
+            
+            if (kullanilanHarfler.Contains(tahmin))
+            {
+                Console.WriteLine($"'{tahmin}' harfini zaten kullandınız. Başka bir harf deneyin.");
+                continue;
+            }
+
+
+            kullanilanHarfler.Add(tahmin);
+
+
+            if (secilenKelime.Contains(tahmin))
+            {
+                for (int i = 0; i < secilenKelime.Length; i++)
+                {
+                    if (secilenKelime[i] == tahmin)
+                    {
+                        dogruTahminler[i] = tahmin;  // Doğru tahmin edilen harfi yerine koy
+                    }
+                }
+            }
+            else
+            {
+                yanlisTahminSayaci++;  // Yanlış tahmin sayısını artır
+                Console.WriteLine($"Yanlış tahmin! '{tahmin}' kelimede yok.");
+            }
+
+            Console.WriteLine();
+        }
+
+       
+        if (new string(dogruTahminler) == secilenKelime)
+        {
+            Console.WriteLine("Tebrikler! Kelimeyi doğru tahmin ettiniz: " + secilenKelime);
+        }
+        else
+        {
+            Console.WriteLine("Maalesef, kaybettiniz. Doğru kelime: " + secilenKelime);
+        }
+    }
+}
+
+
+
+
+
+
+
+ÖDEVLER
+
+1 Spiral Matris: NxN boyutunda bir matrisi spiral şekilde yazdırma
+
+
+
+
+class SpiralMatrix
+{
+    static void Main()
+    {
+        Console.Write("NxN için N değerini girin: ");
+        int N = int.Parse(Console.ReadLine());
+        int[,] matrix = new int[N, N];
+
+        int value = 1, minCol = 0, maxCol = N - 1, minRow = 0, maxRow = N - 1;
+
+        while (value <= N * N)
+        {
+            for (int i = minCol; i <= maxCol; i++) matrix[minRow, i] = value++;
+            minRow++;
+            for (int i = minRow; i <= maxRow; i++) matrix[i, maxCol] = value++;
+            maxCol--;
+            for (int i = maxCol; i >= minCol; i--) matrix[maxRow, i] = value++;
+            maxRow--;
+            for (int i = maxRow; i >= minRow; i--) matrix[i, minCol] = value++;
+            minCol++;
+        }
+
+        Console.WriteLine("Spiral Matris:");
+        for (int i = 0; i < N; i++)
+        {
+            for (int j = 0; j < N; j++)
+            {
+                Console.Write(matrix[i, j] + "\t");
+            }
+            Console.WriteLine();
+        }
+    }
+}
+---------------------
+
+2. İki Matrisin Çarpımı: Kullanıcıdan alınan iki NxN matrisin çarpımını gerçekleştirme
+
+using System;
+
+class MatrixMultiplication
+{
+    static void Main()
+    {
+        Console.Write("Matris boyutunu girin (NxN için N): ");
+        int N = int.Parse(Console.ReadLine());
+        
+        int[,] matrix1 = new int[N, N];
+        int[,] matrix2 = new int[N, N];
+        int[,] result = new int[N, N];
+
+        Console.WriteLine("Birinci matrisi girin:");
+        for (int i = 0; i < N; i++)
+        {
+            for (int j = 0; j < N; j++)
+            {
+                Console.Write($"matrix1[{i},{j}] = ");
+                matrix1[i, j] = int.Parse(Console.ReadLine());
+            }
+        }
+
+        Console.WriteLine("İkinci matrisi girin:");
+        for (int i = 0; i < N; i++)
+        {
+            for (int j = 0; j < N; j++)
+            {
+                Console.Write($"matrix2[{i},{j}] = ");
+                matrix2[i, j] = int.Parse(Console.ReadLine());
+            }
+        }
+
+      
+        for (int i = 0; i < N; i++)
+        {
+            for (int j = 0; j < N; j++)
+            {
+                result[i, j] = 0;
+                for (int k = 0; k < N; k++)
+                {
+                    result[i, j] += matrix1[i, k] * matrix2[k, j];
+                }
+            }
+        }
+
+
+        for (int i = 0; i < N; i++)
+        {
+            for (int j = 0; j < N; j++)
+            {
+                Console.Write(result[i, j] + "\t");
+            }
+            Console.WriteLine();
+        }
+    }
+}
+
+------------------------------------------
+
+3. N'e Kadar Olan Asal Sayıların Toplamı
+
+using System;
+
+class PrimeSum
+{
+    static bool IsPrime(int number)
+    {
+        if (number < 2) return false;
+        for (int i = 2; i * i <= number; i++)
+        {
+            if (number % i == 0) return false;
+        }
+        return true;
+    }
+
+    static void Main()
+    {
+        Console.Write("N değerini girin: ");
+        int N = int.Parse(Console.ReadLine());
+        int sum = 0;
+
+        for (int i = 2; i <= N; i++)
+        {
+            if (IsPrime(i))
+            {
+                sum += i;
+            }
+        }
+
+        Console.WriteLine($"{N}'e kadar olan asal sayıların toplamı: {sum}");
+    }
+}
+
+
+
+4 - TECHCITYRESCUE 
+using System;
+using System.Collections.Generic;
+
+class TechCityRescue
+{
+    static int[] dx = { 0, 0, 1, -1 }; // Sağa, sola, aşağı, yukarı hareketler
+    static int[] dy = { 1, -1, 0, 0 };
+
+   
+    static int N;
+    
+   
+    static bool[,] visited;
+
+   
+    static int DFS(int[,] grid, int x, int y)
+    {
+        // Eğer x ve y sınırlar dışındaysa veya düğüm zarar görmüşse (0) veya zaten ziyaret edildiyse
+        if (x < 0 || x >= N || y < 0 || y >= N || grid[x, y] == 0 || visited[x, y])
+        {
+            return 0;
+        }
+
+      
+        visited[x, y] = true;
+
+        int rescuedNodes = 1; // Mevcut düğüm kurtarıldı
+
+        // 4 yöne git (yukarı, aşağı, sağ, sol)
+        for (int i = 0; i < 4; i++)
+        {
+            int newX = x + dx[i];
+            int newY = y + dy[i];
+
+            rescuedNodes += DFS(grid, newX, newY);
+        }
+
+        return rescuedNodes;
+    }
+
+    static void Main()
+    {
+        
+        int[,] grid = {
+            { 1, 1, 0, 1 },
+            { 0, 1, 0, 0 },
+            { 1, 1, 1, 0 },
+            { 0, 0, 1, 1 }
+        };
+
+        N = grid.GetLength(0); // NxN grid
+
+      
+        List<(int, int)> robotPositions = new List<(int, int)>
+        {
+            (0, 0), // Robot 1
+            (2, 2), // Robot 2
+            (3, 3)  // Robot 3
+        };
+
+       
+        visited = new bool[N, N];
+
+        int totalRescuedNodes = 0;
+
+       
+        foreach (var (startX, startY) in robotPositions)
+        {
+            totalRescuedNodes += DFS(grid, startX, startY);
+        }
+
+        Console.WriteLine($"Toplam kurtarılan düğüm sayısı: {totalRescuedNodes}");
+    }
+}
+
+-------------------
+
+5-GOLDTEMPLE
+
+using System;
+using System.Collections.Generic;
+
+class LabirentYolBulma
+{
+    
+    static int[] dx = { 0, 0, 1, -1 };
+    static int[] dy = { 1, -1, 0, 0 };
+
+    
+    static int EnKisaYol(int[,] labirent, int N)
+    {
+       
+        if (labirent[0, 0] == 0 || labirent[N - 1, N - 1] == 0)
+            return -1;
+
+
+        Queue<(int, int, int)> kuyruk = new Queue<(int, int, int)>();
+        kuyruk.Enqueue((0, 0, 1)); // Başlangıç noktası (0, 0), ilk adım
+
+
+        bool[,] ziyaretEdildi = new bool[N, N];
+        ziyaretEdildi[0, 0] = true;
+
+        while (kuyruk.Count > 0)
+        {
+            var (x, y, adimSayisi) = kuyruk.Dequeue();
+
+            
+            if (x == N - 1 && y == N - 1)
+                return adimSayisi;
+
+            // 4 farklı yöne git 
+            for (int i = 0; i < 4; i++)
+            {
+                int yeniX = x + dx[i];
+                int yeniY = y + dy[i];
+
+               
+                if (yeniX >= 0 && yeniX < N && yeniY >= 0 && yeniY < N && 
+                    labirent[yeniX, yeniY] == 1 && !ziyaretEdildi[yeniX, yeniY])
+                {
+                  
+                    kuyruk.Enqueue((yeniX, yeniY, adimSayisi + 1));
+                    ziyaretEdildi[yeniX, yeniY] = true;
+                }
+            }
+        }
+
+        
+        return -1;
+    }
+
+    static void Main()
+    {
+
+        int[,] labirent = {
+            { 1, 0, 0, 0 },
+            { 1, 1, 0, 1 },
+            { 0, 1, 1, 1 },
+            { 0, 0, 0, 1 }
+        };
+
+        int N = labirent.GetLength(0); 
+
+        int sonuc = EnKisaYol(labirent, N);
+
+        if (sonuc != -1)
+            Console.WriteLine($"En Kısa Yol: {sonuc} adım");
+        else
+            Console.WriteLine("Yol Yok");
+    }
+}
+

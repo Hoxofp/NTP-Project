@@ -1,0 +1,734 @@
+KALITIM VE POLİMORFİZM ÖDEVLER 
+
+1 :
+
+
+using System;
+
+namespace CompanyEmployeeManagement
+{
+    // Base Employee class
+    public class Calisan
+    {
+        public string Ad { get; set; }
+        public string Soyad { get; set; }
+        public decimal Maas { get; set; }
+        public string Pozisyon { get; set; }
+
+        public Calisan(string ad, string soyad, decimal maas, string pozisyon)
+        {
+            Ad = ad;
+            Soyad = soyad;
+            Maas = maas;
+            Pozisyon = pozisyon;
+        }
+
+        public virtual void BilgiYazdir()
+        {
+            Console.WriteLine($"Çalışan: {Ad} {Soyad}, Maaş: {Maas}, Pozisyon: {Pozisyon}");
+        }
+    }
+
+    // Software Developer class
+    public class Yazilimci : Calisan
+    {
+        public string YazilimDili { get; set; }
+
+        public Yazilimci(string ad, string soyad, decimal maas, string pozisyon, string yazilimDili)
+            : base(ad, soyad, maas, pozisyon)
+        {
+            YazilimDili = yazilimDili;
+        }
+
+        public override void BilgiYazdir()
+        {
+            Console.WriteLine($"Yazılımcı: {Ad} {Soyad}, Maaş: {Maas}, Pozisyon: {Pozisyon}, Yazılım Dili: {YazilimDili}");
+        }
+    }
+
+    // Accountant class
+    public class Muhasebeci : Calisan
+    {
+        public string MuhasebeYazilimi { get; set; }
+
+        public Muhasebeci(string ad, string soyad, decimal maas, string pozisyon, string muhasebeYazilimi)
+            : base(ad, soyad, maas, pozisyon)
+        {
+            MuhasebeYazilimi = muhasebeYazilimi;
+        }
+
+        public override void BilgiYazdir()
+        {
+            Console.WriteLine($"Muhasebeci: {Ad} {Soyad}, Maaş: {Maas}, Pozisyon: {Pozisyon}, Muhasebe Yazılımı: {MuhasebeYazilimi}");
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Çalışan türünü seçiniz: \n1. Yazılımcı \n2. Muhasebeci");
+            string secim = Console.ReadLine();
+
+            if (secim == "1")
+            {
+                Console.WriteLine("Yazılımcı bilgilerini giriniz.");
+                Console.Write("Ad: ");
+                string ad = Console.ReadLine();
+                Console.Write("Soyad: ");
+                string soyad = Console.ReadLine();
+                Console.Write("Maaş: ");
+                decimal maas = Convert.ToDecimal(Console.ReadLine());
+                Console.Write("Pozisyon: ");
+                string pozisyon = Console.ReadLine();
+                Console.Write("Yazılım Dili: ");
+                string yazilimDili = Console.ReadLine();
+
+                Yazilimci yazilimci = new Yazilimci(ad, soyad, maas, pozisyon, yazilimDili);
+                yazilimci.BilgiYazdir();
+            }
+            else if (secim == "2")
+            {
+                Console.WriteLine("Muhasebeci bilgilerini giriniz.");
+                Console.Write("Ad: ");
+                string ad = Console.ReadLine();
+                Console.Write("Soyad: ");
+                string soyad = Console.ReadLine();
+                Console.Write("Maaş: ");
+                decimal maas = Convert.ToDecimal(Console.ReadLine());
+                Console.Write("Pozisyon: ");
+                string pozisyon = Console.ReadLine();
+                Console.Write("Muhasebe Yazılımı: ");
+                string muhasebeYazilimi = Console.ReadLine();
+
+                Muhasebeci muhasebeci = new Muhasebeci(ad, soyad, maas, pozisyon, muhasebeYazilimi);
+                muhasebeci.BilgiYazdir();
+            }
+            else
+            {
+                Console.WriteLine("Geçersiz seçim!");
+            }
+        }
+    }
+}
+
+
+
+2:
+
+
+using System;
+
+namespace ZooManagementSystem
+{
+    // Base Animal class
+    public class Hayvan
+    {
+        public string Ad { get; set; }
+        public string Tur { get; set; }
+        public int Yas { get; set; }
+
+        public Hayvan(string ad, string tur, int yas)
+        {
+            Ad = ad;
+            Tur = tur;
+            Yas = yas;
+        }
+
+        public virtual void SesCikar()
+        {
+            Console.WriteLine("Hayvan bir ses çıkarıyor.");
+        }
+
+        public virtual void BilgiYazdir()
+        {
+            Console.WriteLine($"Ad: {Ad}, Tür: {Tur}, Yaş: {Yas}");
+        }
+    }
+
+    // Mammal class
+    public class Memeli : Hayvan
+    {
+        public string TuyRengi { get; set; }
+
+        public Memeli(string ad, string tur, int yas, string tuyRengi) : base(ad, tur, yas)
+        {
+            TuyRengi = tuyRengi;
+        }
+
+        public override void SesCikar()
+        {
+            Console.WriteLine("Memeli ses çıkarıyor: " + "Mırr! Mırr!");
+        }
+
+        public override void BilgiYazdir()
+        {
+            base.BilgiYazdir();
+            Console.WriteLine($"Tüy Rengi: {TuyRengi}");
+        }
+    }
+
+    // Bird class
+    public class Kus : Hayvan
+    {
+        public double KanatGenisligi { get; set; }
+
+        public Kus(string ad, string tur, int yas, double kanatGenisligi) : base(ad, tur, yas)
+        {
+            KanatGenisligi = kanatGenisligi;
+        }
+
+        public override void SesCikar()
+        {
+            Console.WriteLine("Kuş ses çıkarıyor: " + "Cik! Cik!");
+        }
+
+        public override void BilgiYazdir()
+        {
+            base.BilgiYazdir();
+            Console.WriteLine($"Kanat Genişliği: {KanatGenisligi} cm");
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hayvan türünü seçiniz: \n1. Memeli \n2. Kuş");
+            string secim = Console.ReadLine();
+
+            if (secim == "1")
+            {
+                Console.WriteLine("Memeli bilgilerini giriniz.");
+                Console.Write("Ad: ");
+                string ad = Console.ReadLine();
+                Console.Write("Tür: ");
+                string tur = Console.ReadLine();
+                Console.Write("Yaş: ");
+                int yas = Convert.ToInt32(Console.ReadLine());
+                Console.Write("Tüy Rengi: ");
+                string tuyRengi = Console.ReadLine();
+
+                Memeli memeli = new Memeli(ad, tur, yas, tuyRengi);
+                memeli.BilgiYazdir();
+                memeli.SesCikar();
+            }
+            else if (secim == "2")
+            {
+                Console.WriteLine("Kuş bilgilerini giriniz.");
+                Console.Write("Ad: ");
+                string ad = Console.ReadLine();
+                Console.Write("Tür: ");
+                string tur = Console.ReadLine();
+                Console.Write("Yaş: ");
+                int yas = Convert.ToInt32(Console.ReadLine());
+                Console.Write("Kanat Genişliği (cm): ");
+                double kanatGenisligi = Convert.ToDouble(Console.ReadLine());
+
+                Kus kus = new Kus(ad, tur, yas, kanatGenisligi);
+                kus.BilgiYazdir();
+                kus.SesCikar();
+            }
+            else
+            {
+                Console.WriteLine("Geçersiz seçim!");
+            }
+        }
+    }
+}
+
+
+3:
+
+
+
+using System;
+
+namespace BankAccountSystem
+{
+    // Base Account class
+    public class Hesap
+    {
+        public string HesapNo { get; set; }
+        public decimal Bakiye { get; set; }
+        public string HesapSahibi { get; set; }
+
+        public Hesap(string hesapNo, decimal bakiye, string hesapSahibi)
+        {
+            HesapNo = hesapNo;
+            Bakiye = bakiye;
+            HesapSahibi = hesapSahibi;
+        }
+
+        public virtual void ParaYatir(decimal miktar)
+        {
+            Bakiye += miktar;
+            Console.WriteLine($"{miktar} TL yatırıldı. Yeni Bakiye: {Bakiye} TL");
+        }
+
+        public virtual void ParaCek(decimal miktar)
+        {
+            if (Bakiye >= miktar)
+            {
+                Bakiye -= miktar;
+                Console.WriteLine($"{miktar} TL çekildi. Kalan Bakiye: {Bakiye} TL");
+            }
+            else
+            {
+                Console.WriteLine("Yetersiz bakiye!");
+            }
+        }
+
+        public virtual void BilgiYazdir()
+        {
+            Console.WriteLine($"Hesap No: {HesapNo}, Hesap Sahibi: {HesapSahibi}, Bakiye: {Bakiye} TL");
+        }
+    }
+
+    // Current Account class
+    public class VadesizHesap : Hesap
+    {
+        public decimal EkHesapLimiti { get; set; }
+
+        public VadesizHesap(string hesapNo, decimal bakiye, string hesapSahibi, decimal ekHesapLimiti)
+            : base(hesapNo, bakiye, hesapSahibi)
+        {
+            EkHesapLimiti = ekHesapLimiti;
+        }
+
+        public override void ParaCek(decimal miktar)
+        {
+            if (Bakiye + EkHesapLimiti >= miktar)
+            {
+                decimal totalAvailable = Bakiye + EkHesapLimiti;
+                Bakiye -= miktar;
+                Console.WriteLine($"{miktar} TL çekildi. Kalan Bakiye: {Bakiye} TL (Ek Hesap Limiti dahil: {totalAvailable - miktar} TL)");
+            }
+            else
+            {
+                Console.WriteLine("Yetersiz bakiye ve ek hesap limiti!");
+            }
+        }
+
+        public override void BilgiYazdir()
+        {
+            base.BilgiYazdir();
+            Console.WriteLine($"Ek Hesap Limiti: {EkHesapLimiti} TL");
+        }
+    }
+
+    // Savings Account class
+    public class VadeliHesap : Hesap
+    {
+        public int VadeSuresi { get; set; }
+        public decimal FaizOrani { get; set; }
+
+        public VadeliHesap(string hesapNo, decimal bakiye, string hesapSahibi, int vadeSuresi, decimal faizOrani)
+            : base(hesapNo, bakiye, hesapSahibi)
+        {
+            VadeSuresi = vadeSuresi;
+            FaizOrani = faizOrani;
+        }
+
+        public override void ParaCek(decimal miktar)
+        {
+            Console.WriteLine("Vade dolmadan para çekemezsiniz!");
+        }
+
+        public override void BilgiYazdir()
+        {
+            base.BilgiYazdir();
+            Console.WriteLine($"Vade Süresi: {VadeSuresi} gün, Faiz Oranı: %{FaizOrani}");
+        }
+
+        public void VadeDolduParaCek(decimal miktar)
+        {
+            base.ParaCek(miktar);
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hesap türünü seçiniz: \n1. Vadesiz Hesap \n2. Vadeli Hesap");
+            string secim = Console.ReadLine();
+
+            if (secim == "1")
+            {
+                Console.WriteLine("Vadesiz Hesap bilgilerini giriniz.");
+                Console.Write("Hesap No: ");
+                string hesapNo = Console.ReadLine();
+                Console.Write("Bakiye: ");
+                decimal bakiye = Convert.ToDecimal(Console.ReadLine());
+                Console.Write("Hesap Sahibi: ");
+                string hesapSahibi = Console.ReadLine();
+                Console.Write("Ek Hesap Limiti: ");
+                decimal ekHesapLimiti = Convert.ToDecimal(Console.ReadLine());
+
+                VadesizHesap vadesizHesap = new VadesizHesap(hesapNo, bakiye, hesapSahibi, ekHesapLimiti);
+                vadesizHesap.BilgiYazdir();
+
+                Console.Write("Yatırılacak miktar: ");
+                decimal yatirMiktar = Convert.ToDecimal(Console.ReadLine());
+                vadesizHesap.ParaYatir(yatirMiktar);
+
+                Console.Write("Çekilecek miktar: ");
+                decimal cekMiktar = Convert.ToDecimal(Console.ReadLine());
+                vadesizHesap.ParaCek(cekMiktar);
+            }
+            else if (secim == "2")
+            {
+                Console.WriteLine("Vadeli Hesap bilgilerini giriniz.");
+                Console.Write("Hesap No: ");
+                string hesapNo = Console.ReadLine();
+                Console.Write("Bakiye: ");
+                decimal bakiye = Convert.ToDecimal(Console.ReadLine());
+                Console.Write("Hesap Sahibi: ");
+                string hesapSahibi = Console.ReadLine();
+                Console.Write("Vade Süresi (gün): ");
+                int vadeSuresi = Convert.ToInt32(Console.ReadLine());
+                Console.Write("Faiz Oranı: ");
+                decimal faizOrani = Convert.ToDecimal(Console.ReadLine());
+
+                VadeliHesap vadeliHesap = new VadeliHesap(hesapNo, bakiye, hesapSahibi, vadeSuresi, faizOrani);
+                vadeliHesap.BilgiYazdir();
+
+                Console.Write("Vade dolduktan sonra çekilecek miktar: ");
+                decimal cekMiktar = Convert.ToDecimal(Console.ReadLine());
+                vadeliHesap.VadeDolduParaCek(cekMiktar);
+            }
+            else
+            {
+                Console.WriteLine("Geçersiz seçim!");
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+ABSTRACT SINIF ÖDEVLER : 
+
+1:
+
+
+
+using System;
+
+namespace BankAccountManagement
+{
+    // Abstract Account class
+    public abstract class Hesap
+    {
+        public string HesapNo { get; set; }
+        public decimal Bakiye { get; protected set; }
+
+        public Hesap(string hesapNo, decimal bakiye)
+        {
+            HesapNo = hesapNo;
+            Bakiye = bakiye;
+        }
+
+        public abstract void ParaYatir(decimal miktar);
+        public abstract void ParaCek(decimal miktar);
+    }
+
+    // Savings Account
+    public class BirikimHesabi : Hesap
+    {
+        public decimal FaizOrani { get; set; }
+
+        public BirikimHesabi(string hesapNo, decimal bakiye, decimal faizOrani) : base(hesapNo, bakiye)
+        {
+            FaizOrani = faizOrani;
+        }
+
+        public override void ParaYatir(decimal miktar)
+        {
+            Bakiye += miktar + (miktar * FaizOrani / 100);
+            Console.WriteLine($"Birikim hesabına {miktar} TL yatırıldı. Yeni bakiye: {Bakiye} TL (Faiz oranı: %{FaizOrani})");
+        }
+
+        public override void ParaCek(decimal miktar)
+        {
+            if (Bakiye >= miktar)
+            {
+                Bakiye -= miktar;
+                Console.WriteLine($"Birikim hesabından {miktar} TL çekildi. Kalan bakiye: {Bakiye} TL");
+            }
+            else
+            {
+                Console.WriteLine("Yetersiz bakiye!");
+            }
+        }
+    }
+
+    // Checking Account
+    public class VadesizHesap : Hesap
+    {
+        public decimal IslemUcreti { get; set; }
+
+        public VadesizHesap(string hesapNo, decimal bakiye, decimal islemUcreti) : base(hesapNo, bakiye)
+        {
+            IslemUcreti = islemUcreti;
+        }
+
+        public override void ParaYatir(decimal miktar)
+        {
+            Bakiye += miktar;
+            Console.WriteLine($"Vadesiz hesaba {miktar} TL yatırıldı. Yeni bakiye: {Bakiye} TL");
+        }
+
+        public override void ParaCek(decimal miktar)
+        {
+            decimal toplamMiktar = miktar + IslemUcreti;
+            if (Bakiye >= toplamMiktar)
+            {
+                Bakiye -= toplamMiktar;
+                Console.WriteLine($"Vadesiz hesaptan {miktar} TL çekildi (İşlem ücreti: {IslemUcreti} TL). Kalan bakiye: {Bakiye} TL");
+            }
+            else
+            {
+                Console.WriteLine("Yetersiz bakiye!");
+            }
+        }
+    }
+
+    // Account interface
+    public interface IBankaHesabi
+    {
+        DateTime HesapAcilisTarihi { get; set; }
+        void HesapOzeti();
+    }
+
+    // Implementation of Accounts
+    public class BankaHesabi : IBankaHesabi
+    {
+        public DateTime HesapAcilisTarihi { get; set; }
+        public Hesap Hesap { get; set; }
+
+        public BankaHesabi(Hesap hesap)
+        {
+            Hesap = hesap;
+            HesapAcilisTarihi = DateTime.Now;
+        }
+
+        public void HesapOzeti()
+        {
+            Console.WriteLine($"Hesap No: {Hesap.HesapNo}, Bakiye: {Hesap.Bakiye} TL, Açılış Tarihi: {HesapAcilisTarihi}");
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Create accounts
+            BirikimHesabi birikim = new BirikimHesabi("123456", 1000, 5);
+            VadesizHesap vadesiz = new VadesizHesap("654321", 500, 2);
+
+            BankaHesabi birikimHesabi = new BankaHesabi(birikim);
+            BankaHesabi vadesizHesabi = new BankaHesabi(vadesiz);
+
+            // Perform operations
+            birikim.ParaYatir(200);
+            birikim.ParaCek(100);
+            birikimHesabi.HesapOzeti();
+
+            vadesiz.ParaYatir(300);
+            vadesiz.ParaCek(200);
+            vadesizHesabi.HesapOzeti();
+        }
+    }
+}
+
+2:
+
+
+using System;
+using System.Collections.Generic;
+
+namespace StoreManagementSystem
+{
+    // Abstract Product class
+    public abstract class Urun
+    {
+        public string Ad { get; set; }
+        public decimal Fiyat { get; set; }
+
+        public Urun(string ad, decimal fiyat)
+        {
+            Ad = ad;
+            Fiyat = fiyat;
+        }
+
+        public abstract decimal HesaplaOdeme();
+
+        public virtual void BilgiYazdir()
+        {
+            Console.WriteLine($"Ürün Adı: {Ad}, Fiyat: {Fiyat} TL");
+        }
+    }
+
+    // Book class
+    public class Kitap : Urun
+    {
+        public string Yazar { get; set; }
+
+        public Kitap(string ad, decimal fiyat, string yazar) : base(ad, fiyat)
+        {
+            Yazar = yazar;
+        }
+
+        public override decimal HesaplaOdeme()
+        {
+            return Fiyat + (Fiyat * 0.10m); // Add 10% tax
+        }
+
+        public override void BilgiYazdir()
+        {
+            base.BilgiYazdir();
+            Console.WriteLine($"Yazar: {Yazar}, Ödenecek Tutar: {HesaplaOdeme()} TL");
+        }
+    }
+
+    // Electronics class
+    public class Elektronik : Urun
+    {
+        public string Marka { get; set; }
+
+        public Elektronik(string ad, decimal fiyat, string marka) : base(ad, fiyat)
+        {
+            Marka = marka;
+        }
+
+        public override decimal HesaplaOdeme()
+        {
+            return Fiyat + (Fiyat * 0.25m); // Add 25% tax
+        }
+
+        public override void BilgiYazdir()
+        {
+            base.BilgiYazdir();
+            Console.WriteLine($"Marka: {Marka}, Ödenecek Tutar: {HesaplaOdeme()} TL");
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            List<Urun> urunler = new List<Urun>
+            {
+                new Kitap("C# Programlama", 50, "John Doe"),
+                new Elektronik("Laptop", 5000, "Dell"),
+                new Kitap("Tarih Kitabı", 30, "Jane Austen"),
+                new Elektronik("Telefon", 3000, "Samsung")
+            };
+
+            Console.WriteLine("Mağaza Yönetim Sistemi - Ürün Listesi:");
+            foreach (var urun in urunler)
+            {
+                urun.BilgiYazdir();
+                Console.WriteLine("-------------------");
+            }
+        }
+    }
+}
+
+
+
+3:
+
+
+using System;
+using System.Collections.Generic;
+
+namespace PublisherSubscriberSystem
+{
+    // Subscriber interface
+    public interface IAbone
+    {
+        void BilgiAl(string mesaj);
+    }
+
+    // Publisher interface
+    public interface IYayinci
+    {
+        void AboneEkle(IAbone abone);
+        void AboneCikar(IAbone abone);
+        void BildirimGonder(string mesaj);
+    }
+
+    // Publisher class
+    public class Yayinci : IYayinci
+    {
+        private readonly List<IAbone> aboneler = new List<IAbone>();
+
+        public void AboneEkle(IAbone abone)
+        {
+            aboneler.Add(abone);
+            Console.WriteLine("Yeni bir abone eklendi.");
+        }
+
+        public void AboneCikar(IAbone abone)
+        {
+            aboneler.Remove(abone);
+            Console.WriteLine("Bir abone çıkarıldı.");
+        }
+
+        public void BildirimGonder(string mesaj)
+        {
+            Console.WriteLine("Yayıncı tarafından bildirim gönderiliyor: " + mesaj);
+            foreach (var abone in aboneler)
+            {
+                abone.BilgiAl(mesaj);
+            }
+        }
+    }
+
+    // Subscriber class
+    public class Abone : IAbone
+    {
+        public string Ad { get; set; }
+
+        public Abone(string ad)
+        {
+            Ad = ad;
+        }
+
+        public void BilgiAl(string mesaj)
+        {
+            Console.WriteLine($"{Ad} adlı aboneye bildirim: {mesaj}");
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Yayinci yayinci = new Yayinci();
+
+            Abone abone1 = new Abone("Ahmet");
+            Abone abone2 = new Abone("Ayşe");
+            Abone abone3 = new Abone("Mehmet");
+
+            yayinci.AboneEkle(abone1);
+            yayinci.AboneEkle(abone2);
+            yayinci.AboneEkle(abone3);
+
+            yayinci.BildirimGonder("Yeni bir içerik yayınlandı!");
+
+            yayinci.AboneCikar(abone2);
+
+            yayinci.BildirimGonder("İkinci içerik yayınlandı!");
+        }
+    }
+}

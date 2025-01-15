@@ -1,0 +1,737 @@
+Overloading
+1. Matematiksel İşlemleri Çeşitlendiren Bir Fonksiyon
+
+Bir fonksiyon yazın:
+ Aynı adla ama farklı parametrelerle toplam işlemi yapacak.
+ İlk sürümü iki tam sayıyı toplasın.
+ İkinci sürümü üç tam sayıyı toplasın.
+ Üçüncü sürümü bir dizi (array) tam sayıyı toplasın.
+
+using System;
+
+namespace Çalışma
+{
+    class MATFONKS
+    {
+        // İki tam sayı toplayan metod
+        public int toplama(int n, int y)
+        {
+            return n + y;
+        }
+
+        // Üç tam sayı toplayan metod
+        public int toplama(int n, int y, int z)
+        {
+            return n + y + z;
+        }
+
+        // Bir dizi tam sayıyı toplayan metod
+        public int toplama(int[] sayi)
+        {
+            int toplam = 0;
+            foreach (int num in sayi)
+            {
+                toplam += num; // Her elemanı toplama ekle
+            }
+            return toplam;
+        }
+    }
+
+    class program
+    {
+        static void Main()
+        {
+            MATFONKS m = new MATFONKS();
+
+            // İki tam sayı toplama
+            Console.WriteLine("İki sayının toplamı: " + m.toplama(10, 20));
+
+            // Üç tam sayı toplama
+            Console.WriteLine("Üç sayının toplamı: " + m.toplama(100, 200, 300));
+
+            // Dizi toplama
+            int[] sayilar = { 1, 2, 3, 4, 5 };
+            Console.WriteLine("Dizinin toplamı: " + m.toplama(sayilar));
+        }
+    }
+}
+
+
+2. Farklı Şekillerin Alanını Hesaplayan Bir Fonksiyon
+Bir fonksiyon yazın:
+ Aynı adla ama farklı parametrelerle farklı şekillerin alanını hesaplasın.
+ İlk sürüm, bir karenin alanını hesaplasın (bir kenar uzunluğu verilerek).
+ İkinci sürüm, bir dikdörtgenin alanını hesaplasın (iki kenar uzunluğu verilerek).
+Üçüncü sürüm, bir dairenin alanını hesaplasın (yarıçap verilerek).
+
+using System;
+
+namespace ŞekilAlanları
+{
+    class ALANHESAPLA
+    {
+        // Karenin alanını hesaplar
+        public double Alan(double kenar)
+        {
+            return kenar * kenar;
+        }
+
+        // Dikdörtgenin alanını hesaplar
+        public double Alan(double uzunKenar, double kisaKenar)
+        {
+            return uzunKenar * kisaKenar;
+        }
+
+        // Dairenin alanını hesaplar
+        public double Alan(double yaricap, bool daire)
+        {
+            // daire parametresi sadece overloading'i desteklemek için eklenmiştir.
+            return Math.PI * yaricap * yaricap;
+        }
+    }
+
+    class Program
+    {
+        static void Main()
+        {
+            ALANHESAPLA alanHesapla = new ALANHESAPLA();
+
+            // Karenin alanı
+            Console.WriteLine("Karenin Alanı: " + alanHesapla.Alan(5));
+
+            // Dikdörtgenin alanı
+            Console.WriteLine("Dikdörtgenin Alanı: " + alanHesapla.Alan(4, 6));
+
+            // Dairenin alanı
+            Console.WriteLine("Dairenin Alanı: " + alanHesapla.Alan(3, true));
+        }
+    }
+}
+
+3. Zaman Farkını Farklı Formatlarda Hesaplama
+Bir fonksiyon yazın:
+ Aynı adla ama farklı parametrelerle iki tarih arasındaki farkı hesaplasın.
+ İlk sürüm, gün cinsinden farkı döndürsün.
+ İkinci sürüm, saat cinsinden farkı döndürsün.
+ Üçüncü sürüm, iki tarih arasında yıl, ay ve gün cinsinden farkı ayrı ayrı döndürsün.
+
+using System;
+
+namespace ZamanFarkı
+{
+    class ZAMANFARKI
+    {
+        // Gün cinsinden farkı hesaplar
+        public int Fark(DateTime tarih1, DateTime tarih2)
+        {
+            return (int)(tarih2 - tarih1).TotalDays;
+        }
+
+        // Saat cinsinden farkı hesaplar
+        public int Fark(DateTime tarih1, DateTime tarih2, bool saat)
+        {
+            // saat parametresi sadece overloading'i desteklemek için eklenmiştir.
+            return (int)(tarih2 - tarih1).TotalHours;
+        }
+
+        // Yıl, ay ve gün cinsinden farkı hesaplar
+        public (int Yil, int Ay, int Gun) Fark(DateTime tarih1, DateTime tarih2, string detay)
+        {
+            int yil = tarih2.Year - tarih1.Year;
+            int ay = tarih2.Month - tarih1.Month;
+            int gun = tarih2.Day - tarih1.Day;
+
+            if (gun < 0)
+            {
+                ay -= 1;
+                gun += DateTime.DaysInMonth(tarih1.Year, tarih1.Month);
+            }
+
+            if (ay < 0)
+            {
+                yil -= 1;
+                ay += 12;
+            }
+
+            return (yil, ay, gun);
+        }
+    }
+
+    class Program
+    {
+        static void Main()
+        {
+            ZAMANFARKI zamanFarki = new ZAMANFARKI();
+            DateTime tarih1 = new DateTime(2020, 5, 1);
+            DateTime tarih2 = new DateTime(2023, 11, 21);
+
+            // Gün cinsinden fark
+            Console.WriteLine("Gün Farkı: " + zamanFarki.Fark(tarih1, tarih2));
+
+            // Saat cinsinden fark
+            Console.WriteLine("Saat Farkı: " + zamanFarki.Fark(tarih1, tarih2, true));
+
+            // Yıl, ay ve gün cinsinden fark
+            var fark = zamanFarki.Fark(tarih1, tarih2, "detay");
+            Console.WriteLine($"Yıl: {fark.Yil}, Ay: {fark.Ay}, Gün: {fark.Gun}");
+        }
+    }
+}
+
+
+Tek Boyutlu ve Çift Boyutlu İndeksleyiciler
+1. Özel Bir Kitaplık Yönetim Sistemi
+Bir sınıf oluşturun:
+ Sınıf, bir kitap koleksiyonunu (dizi) depolasın.
+ Kullanıcı, indeksleyici aracılığıyla belirli bir indekste hangi kitabın olduğunu
+öğrenebilsin ve kitap adını değiştirebilsin.
+ Eğer kullanıcı geçersiz bir indeks ile erişim yaparsa uygun bir hata mesajı döndürsün.
+
+
+using System;
+
+namespace Kitaplik
+{
+    class Kitaplik
+    {
+        private string[] kitaplar;
+
+        public Kitaplik(int kapasite)
+        {
+            kitaplar = new string[kapasite];
+        }
+
+        // İndeksleyici
+        public string this[int indeks]
+        {
+            get
+            {
+                if (indeks < 0 || indeks >= kitaplar.Length)
+                    return "Geçersiz indeks!";
+                return kitaplar[indeks] ?? "Bu raf boş.";
+            }
+            set
+            {
+                if (indeks < 0 || indeks >= kitaplar.Length)
+                    Console.WriteLine("Geçersiz indeks!");
+                else
+                    kitaplar[indeks] = value;
+            }
+        }
+    }
+
+    class Program
+    {
+        static void Main()
+        {
+            Kitaplik kitaplik = new Kitaplik(5);
+
+            // Kitap ekleme
+            kitaplik[0] = "1984";
+            kitaplik[1] = "Sefiller";
+
+            // Kitap görüntüleme
+            Console.WriteLine(kitaplik[0]); // 1984
+            Console.WriteLine(kitaplik[1]); // Sefiller
+            Console.WriteLine(kitaplik[2]); // Bu raf boş.
+            Console.WriteLine(kitaplik[10]); // Geçersiz indeks!
+        }
+    }
+}
+
+2. Bir Öğrenci Not Sistemi
+Bir sınıf oluşturun:
+ Öğrencilerin aldığı derslerin notlarını depolasın.
+ Kullanıcı indeksleyici aracılığıyla ders adına göre notlara erişebilsin.
+ Eğer ders yoksa bir hata mesajı döndürsün.
+
+
+using System;
+using System.Collections.Generic;
+
+namespace OgrenciNot
+{
+    class NotSistemi
+    {
+        private Dictionary<string, int> dersNotlari = new Dictionary<string, int>();
+
+        // İndeksleyici
+        public int this[string dersAdi]
+        {
+            get
+            {
+                if (dersNotlari.ContainsKey(dersAdi))
+                    return dersNotlari[dersAdi];
+                else
+                    throw new Exception("Bu ders mevcut değil.");
+            }
+            set
+            {
+                dersNotlari[dersAdi] = value;
+            }
+        }
+    }
+
+    class Program
+    {
+        static void Main()
+        {
+            NotSistemi notlar = new NotSistemi();
+
+            // Ders notu ekleme
+            notlar["Matematik"] = 90;
+            notlar["Fizik"] = 85;
+
+            // Ders notu görüntüleme
+            Console.WriteLine("Matematik: " + notlar["Matematik"]); // 90
+            Console.WriteLine("Fizik: " + notlar["Fizik"]); // 85
+
+            try
+            {
+                Console.WriteLine("Kimya: " + notlar["Kimya"]);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message); // Bu ders mevcut değil.
+            }
+        }
+    }
+}
+
+3. Bir Satranç Tahtası Durumu
+Bir sınıf oluşturun:
+ Satranç tahtasındaki her bir kareyi temsil etsin.
+
+ Kullanıcı, indeksleyici aracılığıyla bir kareye taş koyabilsin ya da taşın ne olduğunu
+öğrenebilsin.
+Eğer kullanıcı geçersiz bir kareye erişmeye çalışırsa bir hata mesajı döndürsün.
+
+
+using System;
+
+namespace SatrancTahtasi
+{
+    class Tahta
+    {
+        private string[,] kareler = new string[8, 8];
+
+        // İndeksleyici
+        public string this[int x, int y]
+        {
+            get
+            {
+                if (x < 0 || x >= 8 || y < 0 || y >= 8)
+                    return "Geçersiz kare!";
+                return kareler[x, y] ?? "Boş";
+            }
+            set
+            {
+                if (x < 0 || x >= 8 || y < 0 || y >= 8)
+                    Console.WriteLine("Geçersiz kare!");
+                else
+                    kareler[x, y] = value;
+            }
+        }
+    }
+
+    class Program
+    {
+        static void Main()
+        {
+            Tahta tahta = new Tahta();
+
+            // Taş ekleme
+            tahta[0, 0] = "Kale";
+            tahta[0, 1] = "At";
+
+            // Kare görüntüleme
+            Console.WriteLine(tahta[0, 0]); // Kale
+            Console.WriteLine(tahta[0, 1]); // At
+            Console.WriteLine(tahta[7, 7]); // Boş
+            Console.WriteLine(tahta[8, 8]); // Geçersiz kare!
+        }
+    }
+}
+
+
+4. Çok Katmanlı Bir Otopark Sistemi
+Bir sınıf oluşturun:
+ Her katmanda bir dizi park yerini temsil etsin.
+ Kullanıcı, indeksleyici aracılığıyla belirli bir kat ve park yeri kombinasyonuna
+erişebilsin.
+ Park yeri boşsa &quot;Empty&quot; döndürsün, doluysa araç plakasını göstersin.
+
+using System;
+
+namespace Otopark
+{
+    class Otopark
+    {
+        private string[,] parkYerleri;
+
+        public Otopark(int katSayisi, int yerSayisi)
+        {
+            parkYerleri = new string[katSayisi, yerSayisi];
+        }
+
+        // İndeksleyici
+        public string this[int kat, int yer]
+        {
+            get
+            {
+                if (kat < 0 || kat >= parkYerleri.GetLength(0) || yer < 0 || yer >= parkYerleri.GetLength(1))
+                    return "Geçersiz park yeri!";
+                return parkYerleri[kat, yer] ?? "Empty";
+            }
+            set
+            {
+                if (kat < 0 || kat >= parkYerleri.GetLength(0) || yer < 0 || yer >= parkYerleri.GetLength(1))
+                    Console.WriteLine("Geçersiz park yeri!");
+                else
+                    parkYerleri[kat, yer] = value;
+            }
+        }
+    }
+
+    class Program
+    {
+        static void Main()
+        {
+            Otopark otopark = new Otopark(3, 5);
+
+            // Araç yerleştirme
+            otopark[0, 0] = "34ABC123";
+            otopark[1, 2] = "34DEF456";
+
+            // Park yeri görüntüleme
+            Console.WriteLine(otopark[0, 0]); // 34ABC123
+            Console.WriteLine(otopark[1, 2]); // 34DEF456
+            Console.WriteLine(otopark[2, 4]); // Empty
+            Console.WriteLine(otopark[3, 0]); // Geçersiz park yeri!
+        }
+    }
+}
+
+Struct
+1. Zaman İşlemleri
+Bir struct oluşturun:
+ Saat ve dakikayı tutacak şekilde tasarlansın (Hour ve Minute özellikleri).
+ Kullanıcı bir zaman nesnesi oluşturduğunda, eğer girilen saat/dakika geçersizse
+otomatik olarak 0 yapılmalı.
+ Zamanın toplam dakika değerini döndüren bir metot ekleyin.
+İki zaman nesnesi arasındaki farkı (dakika olarak) hesaplayan bir metot ekleyin.
+
+using System;
+
+struct Zaman
+{
+    public int Saat { get; set; }
+    public int Dakika { get; set; }
+
+    public Zaman(int saat, int dakika)
+    {
+        // Geçersiz saat/dakika kontrolü
+        Saat = (saat >= 0 && saat < 24) ? saat : 0;
+        Dakika = (dakika >= 0 && dakika < 60) ? dakika : 0;
+    }
+
+    // Zamanın toplam dakika değerini döndürür
+    public int ToplamDakika()
+    {
+        return Saat * 60 + Dakika;
+    }
+
+    // İki zaman arasındaki farkı (dakika olarak) hesaplar
+    public int Fark(Zaman diger)
+    {
+        return Math.Abs(this.ToplamDakika() - diger.ToplamDakika());
+    }
+
+    public override string ToString()
+    {
+        return $"{Saat:D2}:{Dakika:D2}";
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Zaman zaman1 = new Zaman(10, 45);
+        Zaman zaman2 = new Zaman(12, 20);
+
+        Console.WriteLine($"Zaman 1: {zaman1}");
+        Console.WriteLine($"Zaman 2: {zaman2}");
+        Console.WriteLine($"Zaman 1 toplam dakika: {zaman1.ToplamDakika()}");
+        Console.WriteLine($"İki zaman arasındaki fark: {zaman1.Fark(zaman2)} dakika");
+    }
+}
+
+
+2. Karmaşık Sayı Hesaplama
+Bir struct oluşturun:
+ Karmaşık sayıları temsil etsin (Real ve Imaginary özellikleri).
+ Toplama ve çıkarma işlemlerini gerçekleştiren iki metot ekleyin.
+ Sonucu (a + bi) formatında döndüren bir ToString() metodu yazın.
+
+
+using System;
+
+struct KarmaşıkSayı
+{
+    public double Gerçek { get; set; }
+    public double Sanal { get; set; }
+
+    public KarmaşıkSayı(double gerçek, double sanal)
+    {
+        Gerçek = gerçek;
+        Sanal = sanal;
+    }
+
+    // Karmaşık sayı toplama
+    public KarmaşıkSayı Topla(KarmaşıkSayı diger)
+    {
+        return new KarmaşıkSayı(this.Gerçek + diger.Gerçek, this.Sanal + diger.Sanal);
+    }
+
+    // Karmaşık sayı çıkarma
+    public KarmaşıkSayı Çıkar(KarmaşıkSayı diger)
+    {
+        return new KarmaşıkSayı(this.Gerçek - diger.Gerçek, this.Sanal - diger.Sanal);
+    }
+
+    public override string ToString()
+    {
+        return $"{Gerçek} + {Sanal}i";
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        KarmaşıkSayı sayı1 = new KarmaşıkSayı(3, 4);
+        KarmaşıkSayı sayı2 = new KarmaşıkSayı(1, 2);
+
+        Console.WriteLine($"Sayı 1: {sayı1}");
+        Console.WriteLine($"Sayı 2: {sayı2}");
+        Console.WriteLine($"Toplam: {sayı1.Topla(sayı2)}");
+        Console.WriteLine($"Fark: {sayı1.Çıkar(sayı2)}");
+    }
+}
+
+3. GPS Konum Mesafesi
+Bir struct oluşturun:
+ Enlem ve boylam (Latitude ve Longitude) bilgilerini tutsun.
+ İki GPS konumu arasındaki mesafeyi kilometre olarak hesaplayan bir metot ekleyin
+(Haversine Formülü).
+
+
+
+using System;
+
+struct GPSKonum
+{
+    public double Enlem { get; set; }
+    public double Boylam { get; set; }
+
+    public GPSKonum(double enlem, double boylam)
+    {
+        Enlem = enlem;
+        Boylam = boylam;
+    }
+
+    // İki konum arasındaki mesafeyi kilometre olarak hesaplar
+    public double Mesafe(GPSKonum diger)
+    {
+        const double YARIÇAP = 6371; // Dünya'nın yarıçapı (km)
+        double radianEnlem1 = DereceyiRadyana(Enlem);
+        double radianBoylam1 = DereceyiRadyana(Boylam);
+        double radianEnlem2 = DereceyiRadyana(diger.Enlem);
+        double radianBoylam2 = DereceyiRadyana(diger.Boylam);
+
+        double deltaEnlem = radianEnlem2 - radianEnlem1;
+        double deltaBoylam = radianBoylam2 - radianBoylam1;
+
+        double a = Math.Sin(deltaEnlem / 2) * Math.Sin(deltaEnlem / 2) +
+                   Math.Cos(radianEnlem1) * Math.Cos(radianEnlem2) *
+                   Math.Sin(deltaBoylam / 2) * Math.Sin(deltaBoylam / 2);
+
+        double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+
+        return YARIÇAP * c;
+    }
+
+    private static double DereceyiRadyana(double derece)
+    {
+        return derece * Math.PI / 180;
+    }
+
+    public override string ToString()
+    {
+        return $"Enlem: {Enlem}, Boylam: {Boylam}";
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        GPSKonum nokta1 = new GPSKonum(41.0082, 28.9784); // İstanbul
+        GPSKonum nokta2 = new GPSKonum(39.9208, 32.8541); // Ankara
+
+        Console.WriteLine($"Nokta 1: {nokta1}");
+        Console.WriteLine($"Nokta 2: {nokta2}");
+        Console.WriteLine($"Mesafe: {nokta1.Mesafe(nokta2):F2} km");
+    }
+}
+
+Enum
+1. Trafik Işığı Durumu
+Bir enum oluşturun:
+ Trafik ışıkları (Red, Yellow, Green) için durumları temsil etsin.
+ Bir sınıf oluşturun ve enum’a göre hangi durumda ne yapılması gerektiğini döndüren
+bir metot yazın.
+
+
+using System;
+
+enum TrafikIsigi
+{
+    Kirmizi,    // 0
+    Sarı,       // 1
+    Yesil       // 2
+
+}
+
+class Trafik
+{
+    public static string NeYapmali(TrafikIsigi durum)
+    {
+        switch (durum)
+        {
+            case TrafikIsigi.Kirmizi:
+                return "Dur!";
+            case TrafikIsigi.Sarı:
+                return "Hazırlan!";
+            case TrafikIsigi.Yesil:
+                return "Geç!";
+            default:
+                return "Bilinmeyen durum!";
+        }
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        TrafikIsigi durum = TrafikIsigi.Kirmizi;
+        Console.WriteLine($"Durum: {durum}, Yapılacak: {Trafik.NeYapmali(durum)}");
+
+        durum = TrafikIsigi.Yesil;
+        Console.WriteLine($"Durum: {durum}, Yapılacak: {Trafik.NeYapmali(durum)}");
+    }
+}
+
+
+2. Hava Durumu Tahmini
+Bir enum oluşturun:
+ Hava durumu tiplerini (Sunny, Rainy, Cloudy, Stormy) temsil etsin.
+ Enum’a göre tavsiye veren bir metot yazın (örneğin, yağmurluysa şemsiye alın).
+
+using System;
+
+enum HavaDurumu
+{
+    Gunesli,
+    Yagmurlu,
+    Bulutlu,
+    Firtinali
+}
+
+class Hava
+{
+    public static string Tavsiye(HavaDurumu durum)
+    {
+        switch (durum)
+        {
+            case HavaDurumu.Gunesli:
+                return "Güneş kremi sürmeyi unutmayın!";
+            case HavaDurumu.Yagmurlu:
+                return "Şemsiye almayı unutmayın!";
+            case HavaDurumu.Bulutlu:
+                return "Belki yağmur yağabilir, dikkatli olun.";
+            case HavaDurumu.Firtinali:
+                return "Dışarı çıkmamaya çalışın, tehlikeli olabilir!";
+            default:
+                return "Bilinmeyen hava durumu!";
+        }
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        HavaDurumu durum = HavaDurumu.Gunesli;
+        Console.WriteLine($"Durum: {durum}, Tavsiye: {Hava.Tavsiye(durum)}");
+
+        durum = HavaDurumu.Yagmurlu;
+        Console.WriteLine($"Durum: {durum}, Tavsiye: {Hava.Tavsiye(durum)}");
+    }
+}
+
+
+
+3. Çalışan Rolleri ve Maaş Hesaplama
+Bir enum oluşturun:
+ Çalışan rolleri (Manager, Developer, Designer, Tester) için maaşları belirlemek üzere.
+Enum’a göre maaşı hesaplayan bir metot yazın.
+
+using System;
+
+enum CalisanRolu
+{
+    Yonetici,     // Manager
+    Gelistirici,  // Developer
+    Tasarimci,    // Designer
+    Testci        // Tester
+}
+
+class Maas
+{
+    public static decimal HesaplaMaas(CalisanRolu rol)
+    {
+        switch (rol)
+        {
+            case CalisanRolu.Yonetici:
+                return 15000;
+            case CalisanRolu.Gelistirici:
+                return 12000;
+            case CalisanRolu.Tasarimci:
+                return 10000;
+            case CalisanRolu.Testci:
+                return 9000;
+            default:
+                return 0;
+        }
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        CalisanRolu rol = CalisanRolu.Gelistirici;
+        Console.WriteLine($"Rol: {rol}, Maaş: {Maas.HesaplaMaas(rol)} TL");
+
+        rol = CalisanRolu.Tasarimci;
+        Console.WriteLine($"Rol: {rol}, Maaş: {Maas.HesaplaMaas(rol)} TL");
+    }
+}
+
+
+
+
+

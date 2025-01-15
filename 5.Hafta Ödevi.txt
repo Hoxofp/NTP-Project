@@ -1,0 +1,433 @@
+6.HAFTA
+
+Uni-Directonal Association (Tek Yönlü İlişki)
+
+Örnek 2: Yazar ve Kitap
+
+class Yazar
+{
+    public string Ad { get; set; }
+    public List<Kitap> Kitaplar { get; set; } = new List<Kitap>();
+
+    public Yazar(string ad)
+    {
+        Ad = ad;
+    }
+
+    public void KitapEkle(Kitap kitap)
+    {
+        Kitaplar.Add(kitap);
+    }
+}
+
+class Kitap
+{
+    public string Baslik { get; set; }
+
+    public Kitap(string baslik)
+    {
+        Baslik = baslik;
+    }
+}
+
+
+Örnek 3: Çalışan ve Departman
+
+
+class Departman
+{
+    public string Ad { get; set; }
+
+    public Departman(string ad)
+    {
+        Ad = ad;
+    }
+}
+
+class Calisan
+{
+    public string Ad { get; set; }
+    public Departman Departman { get; set; }
+
+    public Calisan(string ad)
+    {
+        Ad = ad;
+    }
+
+    public void DepartmanEkle(Departman departman)
+    {
+        Departman = departman;
+    }
+}
+
+
+
+Örnek 4: Ürün ve Sipariş
+using System;
+using System.Collections.Generic;
+
+class Siparis
+{
+    public int SiparisNo { get; set; }
+    public List<Urun> Urunler { get; set; } = new List<Urun>();
+
+    public Siparis(int siparisNo)
+    {
+        SiparisNo = siparisNo;
+    }
+
+    public void UrunEkle(Urun urun)
+    {
+        Urunler.Add(urun);
+    }
+}
+
+class Urun
+{
+    public string Ad { get; set; }
+
+    public Urun(string ad)
+    {
+        Ad = ad;
+    }
+}
+
+
+
+Örnek 5: Müşteri ve Sipariş
+
+using System;
+using System.Collections.Generic;
+
+class Musteri
+{
+    public string Ad { get; set; }
+    public List<Siparis> Siparisler { get; set; } = new List<Siparis>();
+
+    public Musteri(string ad)
+    {
+        Ad = ad;
+    }
+
+    public void SiparisEkle(Siparis siparis)
+    {
+        Siparisler.Add(siparis);
+    }
+}
+
+class Siparis
+{
+    public int SiparisNo { get; set; }
+
+    public Siparis(int siparisNo)
+    {
+        SiparisNo = siparisNo;
+    }
+}
+
+
+-----------------------------------------
+
+Dependency (Aggregation) (Bağımlılık ve Toplama)
+
+class Doktor
+{
+    public string Ad { get; set; }
+    public List<Hasta> Hastalar { get; set; }
+
+    public Doktor(string ad)
+    {
+        Ad = ad;
+        Hastalar = new List<Hasta>();
+    }
+
+    public void HastaEkle(Hasta hasta)
+    {
+        if (!Hastalar.Contains(hasta))
+        {
+            Hastalar.Add(hasta);
+            hasta.DoktorEkle(this);
+        }
+    }
+}
+
+class Hasta
+{
+    public string Ad { get; set; }
+    public int Yas { get; set; }
+    public Doktor Doktor { get; private set; }
+
+    public Hasta(string ad, int yas)
+    {
+        Ad = ad;
+        Yas = yas;
+    }
+
+    public void DoktorEkle(Doktor doktor)
+    {
+        if (Doktor == null)
+        {
+            Doktor = doktor;
+        }
+    }
+
+
+
+
+
+Örnek 3: Yazar ve Kitap
+Bir yazar birden fazla kitap yazabilir ve her kitap bir yazarla ilişkilidir.
+
+
+using System;
+
+class Yazar
+{
+    public string Ad { get; set; }
+
+    public Yazar(string ad)
+    {
+        Ad = ad;
+    }
+}
+
+class Kitap
+{
+    public string Baslik { get; set; }
+    public Yazar Yazar { get; set; }
+
+    public Kitap(string baslik, Yazar yazar)
+    {
+        Baslik = baslik;
+        Yazar = yazar;
+    }
+}
+
+
+Örnek 4: Şirket ve Çalışan
+Bir şirket birden fazla çalışana sahip olabilir ve her çalışanın bir şirketi vardır.
+
+
+using System;
+using System.Collections.Generic;
+
+class Sirket
+{
+    public string Ad { get; set; }
+    public List<Calisan> Calisanlar { get; set; }
+
+    public Sirket(string ad)
+    {
+        Ad = ad;
+        Calisanlar = new List<Calisan>();
+    }
+
+    public void CalisanEkle(Calisan calisan)
+    {
+        if (!Calisanlar.Contains(calisan))
+        {
+            Calisanlar.Add(calisan);
+            calisan.SirketEkle(this);
+        }
+    }
+}
+
+class Calisan
+{
+    public string Ad { get; set; }
+    public Sirket Sirket { get; private set; }
+
+    public Calisan(string ad)
+    {
+        Ad = ad;
+    }
+
+    public void SirketEkle(Sirket sirket)
+    {
+        if (Sirket == null)
+        {
+            Sirket = sirket;
+        }
+    }
+}
+
+
+Örnek 5: Ebeveyn ve Çocuk
+Bir ebeveynin birden fazla çocuğu olabilir ve her çocuk bir ebeveynle ilişkilidir.
+
+using System;
+using System.Collections.Generic;
+
+class Ebeveyn
+{
+    public string Ad { get; set; }
+    public List<Cocuk> Cocuklar { get; set; }
+
+    public Ebeveyn(string ad)
+    {
+        Ad = ad;
+        Cocuklar = new List<Cocuk>();
+    }
+
+    public void CocukEkle(Cocuk cocuk)
+    {
+        if (!Cocuklar.Contains(cocuk))
+        {
+            Cocuklar.Add(cocuk);
+            cocuk.EbeveynEkle(this);
+        }
+    }
+}
+
+class Cocuk
+{
+    public string Ad { get; set; }
+    public Ebeveyn Ebeveyn { get; private set; }
+
+    public Cocuk(string ad)
+    {
+        Ad = ad;
+    }
+
+    public void EbeveynEkle(Ebeveyn ebeveyn)
+    {
+        if (Ebeveyn == null)
+        {
+            Ebeveyn = ebeveyn;
+        }
+    }
+}
+
+----------------------------------------------
+Dependency (Composition) (Bağımlılık ve Bileşim)
+
+Örnek 2: Bilgisayar ve İşlemci
+Bir bilgisayarın işlemcisi vardır ve işlemci bilgisayarın ayrılmaz bir parçasıdır.
+
+using System;
+
+class Islemci
+{
+    public string Model { get; set; }
+    public int CekirdekSayisi { get; set; }
+
+    public Islemci(string model, int cekirdekSayisi)
+    {
+        Model = model;
+        CekirdekSayisi = cekirdekSayisi;
+    }
+
+    public void IslemciBilgisi()
+    {
+        Console.WriteLine($"İşlemci Modeli: {Model}, Çekirdek Sayısı: {CekirdekSayisi}");
+    }
+}
+
+class Bilgisayar
+{
+    public string Marka { get; set; }
+    public Islemci Islemci { get; private set; }
+
+    public Bilgisayar(string marka, string islemciModel, int cekirdekSayisi)
+    {
+        Marka = marka;
+        Islemci = new Islemci(islemciModel, cekirdekSayisi); // Bilgisayar oluşturulduğunda işlemci de oluşturulur
+    }
+
+    public void BilgiYazdir()
+    {
+        Console.WriteLine($"Bilgisayar Markası: {Marka}");
+        Islemci.IslemciBilgisi();
+    }
+}
+
+
+Örnek 3: Otomobil ve Motor
+Bir otomobilin motoru vardır ve motor otomobilin ayrılmaz bir parçasıdır.
+
+using System;
+
+class Motor
+{
+    public int BeygirGucu { get; set; }
+    public string Tip { get; set; }
+
+    public Motor(int beygirGucu, string tip)
+    {
+        BeygirGucu = beygirGucu;
+        Tip = tip;
+    }
+
+    public void MotorBilgisi()
+    {
+        Console.WriteLine($"Motor Tipi: {Tip}, Beygir Gücü: {BeygirGucu}");
+    }
+}
+
+class Otomobil
+{
+    public string Marka { get; set; }
+    public Motor Motor { get; private set; }
+
+    public Otomobil(string marka, int beygirGucu, string motorTip)
+    {
+        Marka = marka;
+        Motor = new Motor(beygirGucu, motorTip); // Otomobil oluşturulduğunda motor da oluşturulur
+    }
+
+    public void BilgiYazdir()
+    {
+        Console.WriteLine($"Otomobil Markası: {Marka}");
+        Motor.MotorBilgisi();
+    }
+}
+
+
+Örnek 4: Okul ve Öğrenci
+Bir okul birçok öğrenciye sahiptir. Eğer okul kapanırsa, öğrenciler de kapanmış kabul edilir.
+
+using System;
+using System.Collections.Generic;
+
+class Ogrenci
+{
+    public string Ad { get; set; }
+
+    public Ogrenci(string ad)
+    {
+        Ad = ad;
+    }
+
+    public void OgrenciBilgisi()
+    {
+        Console.WriteLine($"Öğrenci Adı: {Ad}");
+    }
+}
+
+class Okul
+{
+    public string Ad { get; set; }
+    public List<Ogrenci> Ogrenciler { get; private set; }
+
+    public Okul(string ad)
+    {
+        Ad = ad;
+        Ogrenciler = new List<Ogrenci>(); // Okul oluşturulduğunda öğrenci listesi hazırlanır
+    }
+
+    public void OgrenciEkle(string ogrenciAdi)
+    {
+        Ogrenciler.Add(new Ogrenci(ogrenciAdi));
+    }
+
+    public void BilgiYazdir()
+    {
+        Console.WriteLine($"Okul Adı: {Ad}");
+        Console.WriteLine("Öğrenciler:");
+        foreach (var ogrenci in Ogrenciler)
+        {
+            ogrenci.OgrenciBilgisi();
+        }
+    }
+}
+
